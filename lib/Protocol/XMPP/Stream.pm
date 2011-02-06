@@ -1,6 +1,6 @@
 package Protocol::XMPP::Stream;
 BEGIN {
-  $Protocol::XMPP::Stream::VERSION = '0.002';
+  $Protocol::XMPP::Stream::VERSION = '0.003';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Stream - handle XMPP protocol stream
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
 

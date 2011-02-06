@@ -1,10 +1,9 @@
 package Protocol::XMPP::User;
 BEGIN {
-  $Protocol::XMPP::User::VERSION = '0.002';
+  $Protocol::XMPP::User::VERSION = '0.003';
 }
 use strict;
 use warnings FATAL => 'all';
-use 5.010;
 
 use Protocol::XMPP::Roster;
 

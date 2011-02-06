@@ -1,6 +1,6 @@
 package Protocol::XMPP::Message;
 BEGIN {
-  $Protocol::XMPP::Message::VERSION = '0.002';
+  $Protocol::XMPP::Message::VERSION = '0.003';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Feature - register ability to deal with a specific feature
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
 
@@ -22,12 +22,12 @@ version 0.002
 
 =cut
 
-sub from { shift->{from} // '' }
-sub to { shift->{to} // '' }
-sub subject { shift->{subject} // '' }
-sub body { shift->{body} // '' }
-sub type { shift->{type} // 'chat' }
-sub nick { my $self = shift; $self->{nick} // $self->{from} }
+sub from { shift->{from} || '' }
+sub to { shift->{to} || '' }
+sub subject { shift->{subject} || '' }
+sub body { shift->{body} || '' }
+sub type { shift->{type} || 'chat' }
+sub nick { my $self = shift; $self->{nick} || $self->{from} }
 
 sub reply {
 	my $self = shift;

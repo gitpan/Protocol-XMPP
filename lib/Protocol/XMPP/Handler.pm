@@ -1,10 +1,9 @@
 package Protocol::XMPP::Handler;
 BEGIN {
-  $Protocol::XMPP::Handler::VERSION = '0.002';
+  $Protocol::XMPP::Handler::VERSION = '0.003';
 }
 use strict;
 use warnings FATAL => 'all';
-use 5.010;
 use parent qw(XML::SAX::Base);
 
 =head1 NAME
@@ -13,7 +12,7 @@ use parent qw(XML::SAX::Base);
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 DESCRIPTION
 
@@ -56,7 +55,7 @@ sub classFromElement {
 		'subject'		=> 'Protocol::XMPP::Element::Subject',
 		'active'		=> 'Protocol::XMPP::Element::Active',
 		'nick'			=> 'Protocol::XMPP::Element::Nick',
-	}->{$name // 'unknown'} or return '';
+	}->{$name || 'unknown'} or return '';
 	unless($ClassLoaded{$class}) {
 		Module::Load::load($class);
 		++$ClassLoaded{$class};

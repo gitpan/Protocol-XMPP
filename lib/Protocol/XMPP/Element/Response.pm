@@ -1,10 +1,9 @@
 package Protocol::XMPP::Element::Response;
 BEGIN {
-  $Protocol::XMPP::Element::Response::VERSION = '0.002';
+  $Protocol::XMPP::Element::Response::VERSION = '0.003';
 }
 use strict;
 use warnings FATAL => 'all';
-use 5.010;
 use parent qw(Protocol::XMPP::ElementBase);
 
 =head1 NAME
@@ -13,7 +12,7 @@ use parent qw(Protocol::XMPP::ElementBase);
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 DESCRIPTION
 

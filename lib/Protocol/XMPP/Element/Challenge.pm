@@ -1,10 +1,9 @@
 package Protocol::XMPP::Element::Challenge;
 BEGIN {
-  $Protocol::XMPP::Element::Challenge::VERSION = '0.002';
+  $Protocol::XMPP::Element::Challenge::VERSION = '0.003';
 }
 use strict;
 use warnings FATAL => 'all';
-use 5.010;
 use parent qw(Protocol::XMPP::ElementBase);
 
 =head1 NAME
@@ -13,7 +12,7 @@ Protocol::XMPP::Challenge - deal with the XMPP challenge
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
 
@@ -40,11 +39,11 @@ sub end_element {
 	my $data = MIME::Base64::decode_base64($self->{data});
 
 	my ($token) = $self->stream->{features}->{sasl_client}->client_step($data);
-	$self->debug("Token was [" . ($token // 'undefined') . "]");
+	$self->debug("Token was [" . ($token || 'undefined') . "]");
 
 # Return either base64 token value, or '=' (which decodes to empty value but we need to be explicit about
 # this for some recipients) if we didn't have one.
-	my $response = MIME::Base64::encode_base64($token // '', '');
+	my $response = MIME::Base64::encode_base64(defined $token ? $token : '', '');
 	$token = '=' unless defined $response && length $response;
 
 	$self->write_xml(['response', _ns => 'xmpp-sasl', _content => $response]);

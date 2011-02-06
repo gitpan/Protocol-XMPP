@@ -1,6 +1,6 @@
 package Protocol::XMPP::Contact;
 BEGIN {
-  $Protocol::XMPP::Contact::VERSION = '0.002';
+  $Protocol::XMPP::Contact::VERSION = '0.003';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Stream - handle XMPP protocol stream
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,7 @@ version 0.002
 =cut
 
 sub jid { shift->{jid} }
-sub name { my $self = shift; $self->{name} // $self->{jid} }
+sub name { my $self = shift; defined($self->{name}) ? $self->{name} : $self->{jid} }
 
 sub is_me {
 	my $self = shift;

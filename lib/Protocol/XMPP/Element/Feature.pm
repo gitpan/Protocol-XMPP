@@ -1,6 +1,6 @@
 package Protocol::XMPP::Element::Feature;
 BEGIN {
-  $Protocol::XMPP::Element::Feature::VERSION = '0.002';
+  $Protocol::XMPP::Element::Feature::VERSION = '0.003';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Feature - register ability to deal with a specific feature
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
 
@@ -31,7 +31,7 @@ sub new {
 	my $self = $class->SUPER::new(@_);
 	my $feature = $self->attributes->{var};
 
-	$self->debug("Had feature [" . ($feature // 'undef') . "]");
+	$self->debug("Had feature [" . ($feature || 'undef') . "]");
 }
 
 =head2 C<end_element>

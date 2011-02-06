@@ -24,7 +24,7 @@ my %WriteMakefileArgs = (
     'XML::LibXML::SAX::ChunkParser' => '0.00003',
     'parent' => '0'
   },
-  'VERSION' => '0.002',
+  'VERSION' => '0.003',
   'test' => {
     'TESTS' => 't/*.t'
   }
