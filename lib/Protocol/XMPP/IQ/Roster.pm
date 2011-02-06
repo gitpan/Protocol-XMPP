@@ -1,12 +1,19 @@
 package Protocol::XMPP::IQ::Roster;
+BEGIN {
+  $Protocol::XMPP::IQ::Roster::VERSION = '0.002';
+}
 use strict;
 use warnings FATAL => 'all';
-use 5.10.0;
+use 5.010;
 use parent qw(Protocol::XMPP::ElementBase);
 
 =head1 NAME
 
 =head1 SYNOPSIS
+
+=head1 VERSION
+
+version 0.002
 
 =head1 DESCRIPTION
 

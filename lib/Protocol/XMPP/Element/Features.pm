@@ -1,12 +1,19 @@
 package Protocol::XMPP::Element::Features;
+BEGIN {
+  $Protocol::XMPP::Element::Features::VERSION = '0.002';
+}
 use strict;
 use warnings FATAL => 'all';
-use 5.10.0;
+use 5.010;
 use parent qw(Protocol::XMPP::ElementBase);
 
 =head1 NAME
 
 Protocol::XMPP::Features - broker for setting up internal state and triggering reponses based on supported features
+
+=head1 VERSION
+
+version 0.002
 
 =head1 SYNOPSIS
 

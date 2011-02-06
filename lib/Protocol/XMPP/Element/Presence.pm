@@ -1,4 +1,7 @@
 package Protocol::XMPP::Element::Presence;
+BEGIN {
+  $Protocol::XMPP::Element::Presence::VERSION = '0.002';
+}
 use strict;
 use warnings FATAL => 'all';
 use parent qw(Protocol::XMPP::ElementBase);
@@ -8,6 +11,10 @@ use Protocol::XMPP::Contact;
 =head1 NAME
 
 Protocol::XMPP::Success - indicate success for an operation
+
+=head1 VERSION
+
+version 0.002
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,7 @@
 package Protocol::XMPP::Message;
+BEGIN {
+  $Protocol::XMPP::Message::VERSION = '0.002';
+}
 use strict;
 use warnings FATAL => 'all';
 use parent qw(Protocol::XMPP::Base);
@@ -6,6 +9,10 @@ use parent qw(Protocol::XMPP::Base);
 =head1 NAME
 
 Protocol::XMPP::Feature - register ability to deal with a specific feature
+
+=head1 VERSION
+
+version 0.002
 
 =head1 SYNOPSIS
 

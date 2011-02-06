@@ -1,12 +1,19 @@
 package Protocol::XMPP::Handler;
+BEGIN {
+  $Protocol::XMPP::Handler::VERSION = '0.002';
+}
 use strict;
 use warnings FATAL => 'all';
-use 5.10.0;
+use 5.010;
 use parent qw(XML::SAX::Base);
 
 =head1 NAME
 
 =head1 SYNOPSIS
+
+=head1 VERSION
+
+version 0.002
 
 =head1 DESCRIPTION
 

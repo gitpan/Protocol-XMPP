@@ -3,7 +3,7 @@ package Protocol::XMPP;
 use strict;
 use warnings;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 # This package merely imports all necessary dependencies for XMPP support,
 # no actual code is provided here.
@@ -17,6 +17,10 @@ __END__
 =head1 NAME
 
 Protocol::XMPP - Protocol-level support for XMPP interaction
+
+=head1 VERSION
+
+version 0.002
 
 =head1 SYNOPSIS
 
@@ -130,4 +134,3 @@ Tom Molesworth <protocol-xmpp@entitymodel.com>
 =head1 LICENSE
 
 Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
-

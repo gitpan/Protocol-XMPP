@@ -1,4 +1,7 @@
 package Protocol::XMPP::Base;
+BEGIN {
+  $Protocol::XMPP::Base::VERSION = '0.002';
+}
 use strict;
 use warnings FATAL => 'all';
 
@@ -11,6 +14,10 @@ use POSIX qw{strftime};
 =head1 NAME
 
 Protocol::XMPP::Base - base class for L<Protocol::XMPP>
+
+=head1 VERSION
+
+version 0.002
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,7 @@
 package Protocol::XMPP::ElementBase;
+BEGIN {
+  $Protocol::XMPP::ElementBase::VERSION = '0.002';
+}
 use strict;
 use warnings FATAL => 'all';
 use parent qw{Protocol::XMPP::Base};
@@ -6,6 +9,10 @@ use parent qw{Protocol::XMPP::Base};
 =head1 NAME
 
 Protocol::XMPP::ElementBase - base class for L<Protocol::XMPP> XML fragment handling
+
+=head1 VERSION
+
+version 0.002
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,7 @@
 package Protocol::XMPP::Contact;
+BEGIN {
+  $Protocol::XMPP::Contact::VERSION = '0.002';
+}
 use strict;
 use warnings FATAL => 'all';
 use parent qw{Protocol::XMPP::Base};
@@ -6,6 +9,10 @@ use parent qw{Protocol::XMPP::Base};
 =head1 NAME
 
 Protocol::XMPP::Stream - handle XMPP protocol stream
+
+=head1 VERSION
+
+version 0.002
 
 =head1 SYNOPSIS
 
