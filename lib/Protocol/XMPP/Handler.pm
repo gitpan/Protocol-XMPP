@@ -1,6 +1,6 @@
 package Protocol::XMPP::Handler;
 BEGIN {
-  $Protocol::XMPP::Handler::VERSION = '0.003';
+  $Protocol::XMPP::Handler::VERSION = '0.004';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ use parent qw(XML::SAX::Base);
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 DESCRIPTION
 
@@ -140,3 +140,13 @@ sub characters {
 }
 
 1;
+
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <cpan@entitymodel.com>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.

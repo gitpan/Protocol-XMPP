@@ -1,6 +1,6 @@
 package Protocol::XMPP::ElementBase;
 BEGIN {
-  $Protocol::XMPP::ElementBase::VERSION = '0.003';
+  $Protocol::XMPP::ElementBase::VERSION = '0.004';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::ElementBase - base class for L<Protocol::XMPP> XML fragment hand
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -29,7 +29,7 @@ sub new {
 	return $self;
 }
 
-=head2 C<attributes>
+=head2 attributes
 
 Access the XML element attributes as key-value pairs.
 
@@ -75,3 +75,13 @@ sub end_element {
 }
 
 1;
+
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <cpan@entitymodel.com>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.

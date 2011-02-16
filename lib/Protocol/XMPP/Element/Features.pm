@@ -1,6 +1,6 @@
 package Protocol::XMPP::Element::Features;
 BEGIN {
-  $Protocol::XMPP::Element::Features::VERSION = '0.003';
+  $Protocol::XMPP::Element::Features::VERSION = '0.004';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Features - broker for setting up internal state and triggering r
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -48,3 +48,13 @@ sub _sasl_mechanism_list {
 }
 
 1;
+
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <cpan@entitymodel.com>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.

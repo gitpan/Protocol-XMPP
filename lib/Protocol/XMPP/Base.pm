@@ -1,6 +1,6 @@
 package Protocol::XMPP::Base;
 BEGIN {
-  $Protocol::XMPP::Base::VERSION = '0.003';
+  $Protocol::XMPP::Base::VERSION = '0.004';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -17,7 +17,7 @@ Protocol::XMPP::Base - base class for L<Protocol::XMPP>
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -46,11 +46,18 @@ Helper method for displaying a debug message. Only displayed if the debug flag w
 
 sub debug {
 	my $self = shift;
-	return unless $self->stream->{debug};
+	return $self unless $self->{debug};
 
-	my $now = Time::HiRes::time;
-	warn strftime("%Y-%m-%d %H:%M:%S", gmtime($now)) . sprintf(".%03d", int($now * 1000.0) % 1000.0) . " @_\n";
-	return $self;
+	if(!ref $self->{debug}) {
+		my $now = Time::HiRes::time;
+		warn strftime("%Y-%m-%d %H:%M:%S", gmtime($now)) . sprintf(".%03d", int($now * 1000.0) % 1000.0) . " @_\n";
+		return $self;
+	}
+	if(ref $self->{debug} eq 'CODE') {
+		$self->{debug}->(@_);
+		return $self;
+	}
+	die "Unknown debug setting " . $self->{debug};
 }
 
 =head2 _ref_to_xml
@@ -134,13 +141,19 @@ sub write_text {
 	return $self->stream->write_text(@_);
 }
 
+=head2 dispatch_event
+
+Pass through an event (on_XXX handler).
+
+=cut
+
 sub dispatch_event {
 	my $self = shift;
 	return $self->stream->dispatch_event(@_);
 }
 
 
-=head2 C<stream>
+=head2 stream
 
 Returns the active L<Protocol::XMPP::Stream> object.
 
@@ -157,9 +170,25 @@ sub stream {
 	return $self->{stream};
 }
 
+=head2 next_id
+
+Returns the next ID for to use in outgoing messages.
+
+=cut
+
 sub next_id {
 	my $self = shift;
 	return $self->stream->next_id(@_);
 }
 
 1;
+
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <cpan@entitymodel.com>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.

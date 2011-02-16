@@ -1,6 +1,6 @@
 package Protocol::XMPP::TextElement;
 BEGIN {
-  $Protocol::XMPP::TextElement::VERSION = '0.003';
+  $Protocol::XMPP::TextElement::VERSION = '0.004';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -8,11 +8,11 @@ use parent qw(Protocol::XMPP::ElementBase);
 
 =head1 NAME
 
-Protocol::XMPP::TextElement - 
+Protocol::XMPP::TextElement - handle a text element
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -22,9 +22,14 @@ version 0.003
 
 =cut
 
-sub new { my $class = shift; my $self = $class->SUPER::new(@_); $self->{text_data} = ''; $self }
+sub new {
+	my $class = shift;
+	my $self = $class->SUPER::new(@_);
+	$self->{text_data} = '';
+	$self
+}
 
-=head2 C<characters>
+=head2 characters
 
 =cut
 
@@ -35,9 +40,15 @@ sub characters {
 	$self;
 }
 
+=head2 trim
+
+Remove all leading and trailing whitespace.
+
+=cut
+
 sub trim { $_[0] =~ s/(?:^\s*)|(?:\s*$)//g; $_[0] }
 
-=head2 C<end_element>
+=head2 end_element
 
 =cut
 
@@ -49,3 +60,13 @@ sub end_element {
 }
 
 1;
+
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <cpan@entitymodel.com>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.

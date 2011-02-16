@@ -3,7 +3,7 @@ package Protocol::XMPP;
 use strict;
 use warnings;
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
 # This package merely imports all necessary dependencies for XMPP support,
 # no actual code is provided here.
@@ -20,7 +20,7 @@ Protocol::XMPP - Protocol-level support for XMPP interaction
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 

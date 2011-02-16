@@ -21,10 +21,11 @@ my %WriteMakefileArgs = (
   'NAME' => 'Protocol::XMPP',
   'PREREQ_PM' => {
     'Authen::SASL' => '0',
+    'MIME::Base64' => '0',
     'XML::LibXML::SAX::ChunkParser' => '0.00003',
     'parent' => '0'
   },
-  'VERSION' => '0.003',
+  'VERSION' => '0.004',
   'test' => {
     'TESTS' => 't/*.t'
   }

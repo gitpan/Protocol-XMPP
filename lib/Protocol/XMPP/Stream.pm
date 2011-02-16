@@ -1,6 +1,6 @@
 package Protocol::XMPP::Stream;
 BEGIN {
-  $Protocol::XMPP::Stream::VERSION = '0.003';
+  $Protocol::XMPP::Stream::VERSION = '0.004';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Stream - handle XMPP protocol stream
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -27,8 +27,31 @@ use XML::LibXML::SAX::ChunkParser;
 use Protocol::XMPP::Handler;
 use Protocol::XMPP::Message;
 use Authen::SASL;
+use MIME::Base64;
 
 =head2 new
+
+Instantiate a stream object. Used for interacting with the underlying XMPP stream.
+
+Takes the following parameters as callbacks:
+
+=over 4
+
+=item * on_queued_write - this will be called whenever there is data queued to be written to the socket
+
+=item * on_starttls - this will be called when we want to switch to TLS mode
+
+=back
+
+and the following scalar parameters:
+
+=over 4
+
+=item * user - username (not the full JID, just the first part)
+
+=item * pass - password
+
+=back
 
 =cut
 
@@ -142,7 +165,7 @@ sub reset {
 	return $self;
 }
 
-=head2 C<dispatch_event>
+=head2 dispatch_event
 
 Call the appropriate event handler.
 
@@ -194,6 +217,10 @@ sub preamble {
 
 =head2 jid
 
+Returns the full JID for our user.
+
+If given a parameter, will set the JID to that value, extracting hostname and user by splitting the domain.
+
 =cut
 
 sub jid {
@@ -201,6 +228,7 @@ sub jid {
 	if(@_) {
 		$self->{jid} = shift;
 		($self->{user}, $self->{hostname}) = split /\@/, $self->{jid}, 2;
+		($self->{hostname}, $self->{resource}) = split qr{/}, $self->{hostname}, 2 if index($self->{hostname}, '/') >= 0;
 		return $self;
 	}
 	return $self->{jid};
@@ -230,7 +258,15 @@ Name of the host
 
 sub hostname { shift->{hostname} }
 
-=head2 C<write_xml>
+=head2 resource 
+
+Fragment used to differentiate this client from any other active clients for this user (as defined by bare JID).
+
+=cut
+
+sub resource { shift->{resource} }
+
+=head2 write_xml
 
 Write a chunk of XML to the stream, converting from the internal representation to XML
 text stanzas.
@@ -242,7 +278,7 @@ sub write_xml {
 	$self->queue_write($self->_ref_to_xml(@_));
 }
 
-=head2 C<write_text>
+=head2 write_text
 
 Write raw text to the output stream.
 
@@ -252,6 +288,22 @@ sub write_text {
 	my $self = shift;
 	$self->queue_write($_) for @_;
 }
+
+=head2 login
+
+Process the login.
+
+Takes optional named parameters:
+
+=over 4
+
+=item * user - username (not the full JID, just the user part)
+
+=item * password - password or passphrase to use in SASL authentication
+
+=back
+
+=cut
 
 sub login {
 	my $self = shift;
@@ -263,26 +315,50 @@ sub login {
 	my $sasl = Authen::SASL->new(
 		mechanism => $self->{features}->_sasl_mechanism_list,
 		callback => {
-# TODO Convert these to plain values or sapped entries
 			pass => sub { $pass },
 			user => sub { $user },
 			authname => sub { warn @_; }
 		}
 	);
 
-# TODO localhost isn't always the right answer here
 	my $s = $sasl->client_new(
 		'xmpp',
 		$self->hostname,
 		0
 	);
 	$self->{features}->{sasl_client} = $s;
-
+	my $msg = $s->client_start;
 	my $mech = $s->mechanism;
+	if(defined($msg) && length($msg)) {
+		$self->debug("Have initial message");
+		if($mech eq 'PLAIN') {
+			my $c = substr $msg, 0, 1, ''; # drop first character
+			die "Unknown prefix character $c" unless $c eq '1';
+		}
+		$msg = MIME::Base64::encode($msg, ''); # convert to base64, no linebreaks
+	}
+
 	$self->debug("SASL mechanism: " . $mech);
-	$self->queue_write($self->_ref_to_xml(['auth', '_ns' => 'xmpp-sasl', mechanism => $mech ]));
+	$self->queue_write(
+		$self->_ref_to_xml(
+			[
+				'auth',
+				'_ns' => 'xmpp-sasl',
+				mechanism => $mech,
+				   $msg
+				? (_content => $msg)
+				: ()
+			]
+		)
+	);
 	return $self;
 }
+
+=head2 is_authorised
+
+Returns true if we are authorised already.
+
+=cut
 
 sub is_authorised {
 	my $self = shift;
@@ -295,6 +371,12 @@ sub is_authorised {
 	return $self->{authorised};
 }
 
+=head2 is_loggedin
+
+Returns true if we are logged in already.
+
+=cut
+
 sub is_loggedin {
 	my $self = shift;
 	if(@_) {
@@ -306,13 +388,19 @@ sub is_loggedin {
 	return $self->{loggedin};
 }
 
-=head2 C<stream>
+=head2 stream
 
 Override the ->stream method from the base class so that we pick up our own methods directly.
 
 =cut
 
 sub stream { shift }
+
+=head2 next_id
+
+Returns the next ID in the sequence for outgoing requests.
+
+=cut
 
 sub next_id {
 	my $self = shift;
@@ -322,6 +410,12 @@ sub next_id {
 	return $self->{request_id}++;
 }
 
+=head2 on_tls_complete
+
+Continues the next part of the connection when TLS is complete.
+
+=cut
+
 sub on_tls_complete {
 	my $self = shift;
 	delete $self->{tls_pending};
@@ -329,15 +423,26 @@ sub on_tls_complete {
 	$self->write_text($_) for @{$self->preamble};
 }
 
+=head2 compose
+
+Compose a new outgoing message.
+
+=cut
+
 sub compose {
 	my $self = shift;
 	my %args = @_;
 	return Protocol::XMPP::Message->new(	
 		stream	=> $self,
-		from	=> $self->jid,
 		%args
 	);
 }
+
+=head2 subscribe
+
+Subscribe to a new contact. Takes a single JID as target.
+
+=cut
 
 sub subscribe {
 	my $self = shift;
@@ -348,6 +453,11 @@ sub subscribe {
 	)->subscribe;
 }
 
+=head2 unsubscribe
+
+Unsubscribe from the given contact. Takes a single JID as target.
+=cut
+
 sub unsubscribe {
 	my $self = shift;
 	my $to = shift;
@@ -357,6 +467,12 @@ sub unsubscribe {
 	)->unsubscribe;
 }
 
+=head2 authorise
+
+Grant authorisation to the given contact. Takes a single JID as target.
+
+=cut
+
 sub authorise {
 	my $self = shift;
 	my $to = shift;
@@ -365,6 +481,12 @@ sub authorise {
 		jid	=> $to,
 	)->authorise;
 }
+
+=head2 deauthorise
+
+Revokes auth for the given contact. Takes a single JID as target.
+
+=cut
 
 sub deauthorise {
 	my $self = shift;
@@ -376,3 +498,13 @@ sub deauthorise {
 }
 
 1;
+
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <cpan@entitymodel.com>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.

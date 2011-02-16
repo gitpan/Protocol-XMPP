@@ -1,6 +1,6 @@
 package Protocol::XMPP::Element::Mechanism;
 BEGIN {
-  $Protocol::XMPP::Element::Mechanism::VERSION = '0.003';
+  $Protocol::XMPP::Element::Mechanism::VERSION = '0.004';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Mechanism - information on available auth mechanisms
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,7 @@ version 0.003
 =cut
 
 
-=head2 C<on_text_complete>
+=head2 on_text_complete
 
 Set L<type> based on the text data.
 
@@ -32,19 +32,19 @@ Set L<type> based on the text data.
 sub on_text_complete {
 	my $self = shift;
 	my $data = shift;
-	$self->type = $data;
+	$self->{type} = $data;
 	return $self;
 }
 	
-=head2 C<type>
+=head2 type
 
 Mechanism type.
 
 =cut
 
-sub type : lvalue { shift->{type} }
+sub type { shift->{type} }
 
-=head2 C<end_element>
+=head2 end_element
 
 =cut
 
@@ -57,3 +57,13 @@ sub end_element {
 }
 
 1;
+
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <cpan@entitymodel.com>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.

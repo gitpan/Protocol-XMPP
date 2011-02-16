@@ -1,3 +1,9 @@
+0.004     2011-02-16 23:00:03 Europe/London
+	Fix auth against Google caused by missing ->client_start data send (thanks to mst for reporting)
+	Set JID when server notifies us of the current JID value, and don't bother sending JID in presence
+	 or messages since the server knows who we are.
+	Drop lvalue on mechanism type.
+
 0.003     2011-02-06 06:13:24 Europe/London
 	Drop dependency on perl-5.10
 

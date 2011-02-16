@@ -1,6 +1,6 @@
 package Protocol::XMPP::Element::IQ;
 BEGIN {
-  $Protocol::XMPP::Element::IQ::VERSION = '0.003';
+  $Protocol::XMPP::Element::IQ::VERSION = '0.004';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Bind - register ability to deal with a specific feature
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -22,7 +22,7 @@ version 0.003
 
 =cut
 
-=head2 C<end_element>
+=head2 end_element
 
 =cut
 
@@ -32,3 +32,13 @@ sub end_element {
 }
 
 1;
+
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <cpan@entitymodel.com>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.

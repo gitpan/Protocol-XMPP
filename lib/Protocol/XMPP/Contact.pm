@@ -1,6 +1,6 @@
 package Protocol::XMPP::Contact;
 BEGIN {
-  $Protocol::XMPP::Contact::VERSION = '0.003';
+  $Protocol::XMPP::Contact::VERSION = '0.004';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Stream - handle XMPP protocol stream
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -30,7 +30,7 @@ sub is_me {
 	return $self->jid eq $self->stream->jid;
 }
 
-=head2 C<authorise>
+=head2 authorise
 
 Authorise a contact by sending a 'subscribed' presence response.
 
@@ -41,7 +41,7 @@ sub authorise {
 	$self->write_xml(['presence', from => $self->stream->jid, to => $self->jid, type => 'subscribed']);
 }
 
-=head2 C<subscribe>
+=head2 subscribe
 
 Request subscription for a contact by sending a 'subscribe' presence response.
 
@@ -52,7 +52,7 @@ sub subscribe {
 	$self->write_xml(['presence', from => $self->stream->jid, to => $self->jid, type => 'subscribe']);
 }
 
-=head2 C<unsubscribe>
+=head2 unsubscribe
 
 Reject or unsubscribe a contact by sending an 'unsubscribed' presence response.
 
@@ -64,3 +64,13 @@ sub unsubscribe {
 }
 
 1;
+
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <cpan@entitymodel.com>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
