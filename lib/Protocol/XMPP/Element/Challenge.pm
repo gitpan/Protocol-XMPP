@@ -1,6 +1,6 @@
 package Protocol::XMPP::Element::Challenge;
 BEGIN {
-  $Protocol::XMPP::Element::Challenge::VERSION = '0.004';
+  $Protocol::XMPP::Element::Challenge::VERSION = '0.005';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Challenge - deal with the XMPP challenge
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 

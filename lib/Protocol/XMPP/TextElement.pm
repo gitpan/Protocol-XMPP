@@ -1,6 +1,6 @@
 package Protocol::XMPP::TextElement;
 BEGIN {
-  $Protocol::XMPP::TextElement::VERSION = '0.004';
+  $Protocol::XMPP::TextElement::VERSION = '0.005';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::TextElement - handle a text element
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 package Protocol::XMPP::Element::Mechanism;
 BEGIN {
-  $Protocol::XMPP::Element::Mechanism::VERSION = '0.004';
+  $Protocol::XMPP::Element::Mechanism::VERSION = '0.005';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Mechanism - information on available auth mechanisms
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 

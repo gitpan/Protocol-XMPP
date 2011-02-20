@@ -1,6 +1,6 @@
 package Protocol::XMPP::Element::Features;
 BEGIN {
-  $Protocol::XMPP::Element::Features::VERSION = '0.004';
+  $Protocol::XMPP::Element::Features::VERSION = '0.005';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::Features - broker for setting up internal state and triggering r
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 

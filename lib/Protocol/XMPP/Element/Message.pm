@@ -1,6 +1,6 @@
 package Protocol::XMPP::Element::Message;
 BEGIN {
-  $Protocol::XMPP::Element::Message::VERSION = '0.004';
+  $Protocol::XMPP::Element::Message::VERSION = '0.005';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -14,7 +14,7 @@ Protocol::XMPP::Feature - register ability to deal with a specific feature
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 package Protocol::XMPP::ElementBase;
 BEGIN {
-  $Protocol::XMPP::ElementBase::VERSION = '0.004';
+  $Protocol::XMPP::ElementBase::VERSION = '0.005';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -12,7 +12,7 @@ Protocol::XMPP::ElementBase - base class for L<Protocol::XMPP> XML fragment hand
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 

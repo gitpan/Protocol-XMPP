@@ -1,3 +1,6 @@
+0.005     2011-02-20 01:33:44 Europe/London
+	Add missing Module::Load dependency
+
 0.004     2011-02-16 23:00:03 Europe/London
 	Fix auth against Google caused by missing ->client_start data send (thanks to mst for reporting)
 	Set JID when server notifies us of the current JID value, and don't bother sending JID in presence

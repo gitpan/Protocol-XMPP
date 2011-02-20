@@ -1,6 +1,6 @@
 package Protocol::XMPP::User;
 BEGIN {
-  $Protocol::XMPP::User::VERSION = '0.004';
+  $Protocol::XMPP::User::VERSION = '0.005';
 }
 use strict;
 use warnings FATAL => 'all';

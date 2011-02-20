@@ -1,6 +1,6 @@
 package Protocol::XMPP::Element::Presence;
 BEGIN {
-  $Protocol::XMPP::Element::Presence::VERSION = '0.004';
+  $Protocol::XMPP::Element::Presence::VERSION = '0.005';
 }
 use strict;
 use warnings FATAL => 'all';
@@ -14,7 +14,7 @@ Protocol::XMPP::Success - indicate success for an operation
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 
