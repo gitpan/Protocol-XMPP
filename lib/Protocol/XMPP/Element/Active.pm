@@ -1,9 +1,7 @@
 package Protocol::XMPP::Element::Active;
-BEGIN {
-  $Protocol::XMPP::Element::Active::VERSION = '0.005';
-}
+$Protocol::XMPP::Element::Active::VERSION = '0.006';
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 use parent qw(Protocol::XMPP::ElementBase);
 
 =head1 NAME
@@ -12,7 +10,7 @@ Protocol::XMPP::Feature - register ability to deal with a specific feature
 
 =head1 VERSION
 
-version 0.005
+Version 0.006
 
 =head1 SYNOPSIS
 
@@ -41,4 +39,4 @@ Tom Molesworth <cpan@entitymodel.com>
 
 =head1 LICENSE
 
-Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2010-2014. Licensed under the same terms as Perl itself.

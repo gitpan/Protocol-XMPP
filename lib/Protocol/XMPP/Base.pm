@@ -1,10 +1,11 @@
 package Protocol::XMPP::Base;
-BEGIN {
-  $Protocol::XMPP::Base::VERSION = '0.005';
-}
+$Protocol::XMPP::Base::VERSION = '0.006';
 use strict;
-use warnings FATAL => 'all';
+use warnings;
+use parent qw(Mixin::Event::Dispatch);
+use constant EVENT_DISPATCH_ON_FALLBACK => 0;
 
+use Future;
 use Scalar::Util ();
 
 # For debug messages
@@ -17,7 +18,7 @@ Protocol::XMPP::Base - base class for L<Protocol::XMPP>
 
 =head1 VERSION
 
-version 0.005
+Version 0.006
 
 =head1 SYNOPSIS
 
@@ -35,7 +36,14 @@ Constructor. Stores all parameters on $self, including the top level stack item 
 
 sub new {
 	my $class = shift;
-	return bless { @_ }, $class;
+	return bless {
+		future_factory => sub { Future->new },
+		@_
+	}, $class;
+}
+
+sub new_future {
+	shift->{future_factory}->()
 }
 
 =head2 debug
@@ -191,4 +199,4 @@ Tom Molesworth <cpan@entitymodel.com>
 
 =head1 LICENSE
 
-Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2010-2014. Licensed under the same terms as Perl itself.

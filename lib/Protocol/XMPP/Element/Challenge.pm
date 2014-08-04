@@ -1,9 +1,7 @@
 package Protocol::XMPP::Element::Challenge;
-BEGIN {
-  $Protocol::XMPP::Element::Challenge::VERSION = '0.005';
-}
+$Protocol::XMPP::Element::Challenge::VERSION = '0.006';
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 use parent qw(Protocol::XMPP::ElementBase);
 
 =head1 NAME
@@ -12,7 +10,7 @@ Protocol::XMPP::Challenge - deal with the XMPP challenge
 
 =head1 VERSION
 
-version 0.005
+Version 0.006
 
 =head1 SYNOPSIS
 
@@ -46,8 +44,11 @@ sub end_element {
 	my $response = MIME::Base64::encode_base64(defined $token ? $token : '', '');
 	$token = '=' unless defined $response && length $response;
 
-	$self->write_xml(['response', _ns => 'xmpp-sasl', _content => $response]);
-	$self;
+	$self->write_xml([
+		'response',
+		_ns => 'xmpp-sasl',
+		_content => $response
+	]);
 }
 
 1;
@@ -60,4 +61,4 @@ Tom Molesworth <cpan@entitymodel.com>
 
 =head1 LICENSE
 
-Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2010-2014. Licensed under the same terms as Perl itself.

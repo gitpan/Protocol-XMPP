@@ -1,9 +1,7 @@
 package Protocol::XMPP::ElementBase;
-BEGIN {
-  $Protocol::XMPP::ElementBase::VERSION = '0.005';
-}
+$Protocol::XMPP::ElementBase::VERSION = '0.006';
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 use parent qw{Protocol::XMPP::Base};
 
 =head1 NAME
@@ -12,7 +10,7 @@ Protocol::XMPP::ElementBase - base class for L<Protocol::XMPP> XML fragment hand
 
 =head1 VERSION
 
-version 0.005
+Version 0.006
 
 =head1 SYNOPSIS
 
@@ -74,6 +72,17 @@ sub end_element {
 	$self->debug("Virtual end_element for $_[0]");
 }
 
+=head2 class_from_element
+
+Returns a class suitable for handling the given element,
+if we have one.
+
+If we don't have a local handler, returns undef.
+
+=cut
+
+sub class_from_element { undef }
+
 1;
 
 __END__
@@ -84,4 +93,4 @@ Tom Molesworth <cpan@entitymodel.com>
 
 =head1 LICENSE
 
-Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2010-2014. Licensed under the same terms as Perl itself.

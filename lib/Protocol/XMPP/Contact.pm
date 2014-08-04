@@ -1,9 +1,7 @@
 package Protocol::XMPP::Contact;
-BEGIN {
-  $Protocol::XMPP::Contact::VERSION = '0.005';
-}
+$Protocol::XMPP::Contact::VERSION = '0.006';
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 use parent qw{Protocol::XMPP::Base};
 
 =head1 NAME
@@ -12,11 +10,7 @@ Protocol::XMPP::Stream - handle XMPP protocol stream
 
 =head1 VERSION
 
-version 0.005
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
+Version 0.006
 
 =head1 METHODS
 
@@ -73,4 +67,4 @@ Tom Molesworth <cpan@entitymodel.com>
 
 =head1 LICENSE
 
-Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2010-2014. Licensed under the same terms as Perl itself.

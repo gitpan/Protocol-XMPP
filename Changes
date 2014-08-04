@@ -1,3 +1,13 @@
+0.006     2014-08-04 19:25:04+01:00 Europe/London
+	New features:
+	* API updates to support Futures
+
+	Bugs fixed:
+	* Avoid hardcoded debug flag (oops)
+	* Fixed SASL auth handling (was adding then removing a stray '1' from the SASL string)
+
+	Thanks to frew for helping with testing, bug fixing and documentation.
+
 0.005     2011-02-20 01:33:44 Europe/London
 	Add missing Module::Load dependency
 

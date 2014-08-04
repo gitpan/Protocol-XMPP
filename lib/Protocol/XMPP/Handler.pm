@@ -1,9 +1,7 @@
 package Protocol::XMPP::Handler;
-BEGIN {
-  $Protocol::XMPP::Handler::VERSION = '0.005';
-}
+$Protocol::XMPP::Handler::VERSION = '0.006';
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 use parent qw(XML::SAX::Base);
 
 =head1 NAME
@@ -12,7 +10,7 @@ use parent qw(XML::SAX::Base);
 
 =head1 VERSION
 
-version 0.005
+Version 0.006
 
 =head1 DESCRIPTION
 
@@ -25,9 +23,15 @@ use Module::Load ();
 # mainly used for debugging / tracing which modules were loaded
 my %ClassLoaded;
 
-sub classFromElement {
+sub class_from_element {
 	my $self = shift;
 	my $name = shift;
+	# Allow entries on the stack to have the first
+	# go at handling the element.
+	if($self->{stack} && $self->{stack}[-1]) {
+		my $local = $self->{stack}[-1]->class_from_element($name);
+		return $local if $local;
+	}
 	my $class = {
 		'unknown'		=> '',
 
@@ -55,6 +59,7 @@ sub classFromElement {
 		'subject'		=> 'Protocol::XMPP::Element::Subject',
 		'active'		=> 'Protocol::XMPP::Element::Active',
 		'nick'			=> 'Protocol::XMPP::Element::Nick',
+		'stream:stream'	=> 'Protocol::XMPP::Element::Stream',
 	}->{$name || 'unknown'} or return '';
 	unless($ClassLoaded{$class}) {
 		Module::Load::load($class);
@@ -80,7 +85,7 @@ sub debug {
 
 sub parent {
 	my $self = shift;
-	my ($parent) = grep { defined } reverse @{$self->{stack}};
+	my ($parent) = grep { defined } reverse @{$self->{stack} ||= []};
 	return $parent;
 }
 
@@ -94,7 +99,7 @@ sub start_element {
 
 # Find an appropriate class for this element
 	my $v = $element->{Name};
-	my $class = $self->classFromElement($v);
+	my $class = $self->class_from_element($v);
 
 	if($class) {
 		my $obj = $class->new(
@@ -149,4 +154,4 @@ Tom Molesworth <cpan@entitymodel.com>
 
 =head1 LICENSE
 
-Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2010-2014. Licensed under the same terms as Perl itself.

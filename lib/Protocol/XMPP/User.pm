@@ -1,9 +1,17 @@
 package Protocol::XMPP::User;
-BEGIN {
-  $Protocol::XMPP::User::VERSION = '0.005';
-}
+$Protocol::XMPP::User::VERSION = '0.006';
 use strict;
-use warnings FATAL => 'all';
+use warnings;
+
+=head1 NAME
+
+Protocol::XMPP::User - user-related functionality
+
+=head1 VERSION
+
+Version 0.006
+
+=cut
 
 use Protocol::XMPP::Roster;
 
@@ -32,5 +40,4 @@ Tom Molesworth <cpan@entitymodel.com>
 
 =head1 LICENSE
 
-Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
-
+Copyright Tom Molesworth 2010-2014. Licensed under the same terms as Perl itself.

@@ -3,7 +3,7 @@ package Protocol::XMPP;
 use strict;
 use warnings;
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 # This package merely imports all necessary dependencies for XMPP support,
 # no actual code is provided here.
@@ -20,7 +20,7 @@ Protocol::XMPP - Protocol-level support for XMPP interaction
 
 =head1 VERSION
 
-version 0.005
+Version 0.006
 
 =head1 SYNOPSIS
 
@@ -53,8 +53,7 @@ An overview of the connection lifetime for a typical client session:
 
 =item * Connect to server
 
-=item * Establish session, including authentication and stream requirements such as TLS or
-compression
+=item * Establish session, including authentication and stream requirements such as TLS or compression
 
 =item * Retrieve roster
 
@@ -98,8 +97,6 @@ Subscription states:
 
 =back
 
-=head2 Presence notifications
-
 =head1 MOTIVATION
 
 This distribution is written with the intention to provide a base for XMPP implementations
@@ -111,16 +108,15 @@ and attempts to minimise any blocking operations.
 
 =over 4
 
-=item * L<AnyEvent::XMPP> - this is an event-based implementation of XMPP which appears to
-be feature-complete enough to provide at least the standard instant message support. The
-documentation is somewhat terse (choosing instead to focus on the implementation details of
-XML in the protocol) but this module is worth a look if you want a more mature codebase.
+=item * L<AnyEvent::XMPP> - this is an event-based implementation of XMPP, seems to support the
+core protocol and some key XEPs such as multi-user chat. The documentation is somewhat terse (rants
+about XML notwithstanding) but more detailed than L<Protocol::XMPP>.
 
 =item * L<Net::XMPP> - another implementation, sadly the XML parser is blocking so although
 it provides the L<Net::XMPP::Protocol> abstraction layer for the XMPP protocol, which probably
 has better feature support than this module, it's not too suitable for dealing with asynchronous / 
-event-based implementations. Also, I wasn't too keen on the direct checking for ref(), callback
-setting and XML implementation here.
+event-based implementations. Also, I wasn't too keen on some of the implementation details, such
+as the direct checking for ref and callback handling.
 
 =item * L<Net::XMPP3::Protocol> - seems to be the same module as above, under a slightly different
 namespace
@@ -131,6 +127,21 @@ namespace
 
 Tom Molesworth <protocol-xmpp@entitymodel.com>
 
+=head1 CONTRIBUTORS
+
+With thanks to the following for contribution:
+
+=over 4
+
+=item * Arthur Axel "fREW" Schmidt for testing, documentation, pointing out some of my mistakes,
+that sort of thing
+
+=item * Paul "LeoNerd" Evans for adding L<Future>s to L<IO::Async> (and writing both in the first place)
+
+=item * Matt Trout for testing early versions
+
+=back
+
 =head1 LICENSE
 
-Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2010-2014. Licensed under the same terms as Perl itself.

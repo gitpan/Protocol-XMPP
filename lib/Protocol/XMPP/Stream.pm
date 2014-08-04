@@ -1,9 +1,7 @@
 package Protocol::XMPP::Stream;
-BEGIN {
-  $Protocol::XMPP::Stream::VERSION = '0.005';
-}
+$Protocol::XMPP::Stream::VERSION = '0.006';
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 use parent qw{Protocol::XMPP::Base};
 
 =head1 NAME
@@ -12,7 +10,7 @@ Protocol::XMPP::Stream - handle XMPP protocol stream
 
 =head1 VERSION
 
-version 0.005
+Version 0.006
 
 =head1 SYNOPSIS
 
@@ -59,11 +57,7 @@ sub new {
 	my $class = shift;
 	my %args = @_;
 
-	my $self = bless { }, $class;
-	foreach (qw{on_queued_write on_starttls user pass}) {
-		$self->{$_} = $args{$_} if exists $args{$_};
-	}
-	$self->{debug} = 1;
+	my $self = $class->SUPER::new(%args);
 	$self->reset;
 	$self->{write_buffer} = [];
 	$self;
@@ -98,9 +92,10 @@ sub queue_write {
 	my $self = shift;
 	my $v = shift;
 	$self->debug("Queued a write for [$v]");
-	push @{$self->{write_buffer}}, $v;
+	my $f = $self->new_future;
+	push @{$self->{write_buffer}}, [ $v, $f ];
 	$self->{on_queued_write}->() if $self->{on_queued_write};
-	return $self;
+	return $f;
 }
 
 =head2 write_buffer
@@ -120,9 +115,18 @@ Retrieves next pending message from the write buffer and removes it from the lis
 sub extract_write {
 	my $self = shift;
 	return unless @{$self->{write_buffer}};
-	my $v = shift @{$self->{write_buffer}};
+	my $next = shift @{$self->{write_buffer}};
+	my ($v) = @$next;
 	$self->debug("Extract write [$v]");
 	return $v;
+}
+
+sub extract_write_and_future {
+	my $self = shift;
+	return unless @{$self->{write_buffer}};
+	my $next = shift @{$self->{write_buffer}};
+	$self->debug("Extract write [$next->[0]]");
+	return $next;
 }
 
 =head2 ready_to_send
@@ -137,6 +141,11 @@ sub ready_to_send {
 	return @{$self->{write_buffer}};
 }
 
+sub features_complete {
+	my $self = shift;
+	$self->{features_complete} ||= $self->new_future;
+}
+
 =head2 reset
 
 Reset this stream.
@@ -149,6 +158,8 @@ events. Used when we expect a new C<<stream>> element, for example after authent
 sub reset {
 	my $self = shift;
 	$self->debug('Reset stream');
+	delete $self->{remote_opened};
+	delete $self->{features_complete};
 	my $handler = Protocol::XMPP::Handler->new(
 		stream => $self		# this will be converted to a weak ref to self...
 	);
@@ -309,15 +320,14 @@ sub login {
 	my $self = shift;
 	my %args = @_;
 
-	my $user = delete $args{user} || $self->user;
-	my $pass = delete $args{password} || $self->pass;
+	my $user = delete $args{user} // $self->user;
+	my $pass = delete $args{password} // $self->pass;
 
 	my $sasl = Authen::SASL->new(
 		mechanism => $self->{features}->_sasl_mechanism_list,
 		callback => {
 			pass => sub { $pass },
 			user => sub { $user },
-			authname => sub { warn @_; }
 		}
 	);
 
@@ -331,13 +341,18 @@ sub login {
 	my $mech = $s->mechanism;
 	if(defined($msg) && length($msg)) {
 		$self->debug("Have initial message");
-		if($mech eq 'PLAIN') {
-			my $c = substr $msg, 0, 1, ''; # drop first character
-			die "Unknown prefix character $c" unless $c eq '1';
-		}
-		$msg = MIME::Base64::encode($msg, ''); # convert to base64, no linebreaks
+		$msg = MIME::Base64::encode($msg, ''); # no linebreaks
 	}
 
+	my $f = $self->new_future;
+	$self->subscribe_to_event(
+		login_success => sub {
+			my ($ev) = @_;
+			# We only wanted a one-shot notification here
+			$ev->unsubscribe;
+			$f->done
+		}
+	);
 	$self->debug("SASL mechanism: " . $mech);
 	$self->queue_write(
 		$self->_ref_to_xml(
@@ -351,7 +366,21 @@ sub login {
 			]
 		)
 	);
-	return $self;
+	return $f;
+}
+
+sub pending_iq {
+	my ($self, $id, $f) = @_;
+	die "IQ request $id already exists" if exists $self->{pending_iq}{$id};
+	$self->{pending_iq}{$id} = $f;
+	$self
+}
+
+sub iq_complete {
+	my ($self, $id, $iq) = @_;
+	die "IQ request $id not found" unless exists $self->{pending_iq}{$id};
+	$self->{pending_iq}{$id}->done($iq);
+	$self
 }
 
 =head2 is_authorised
@@ -366,9 +395,27 @@ sub is_authorised {
 		my $state = shift;
 		$self->{authorised} = $state;
 		$self->dispatch_event($state ? 'authorised' : 'unauthorised');
+		if($state) {
+			my $f;
+			$f = Future->needs_all(
+				$self->remote_opened,
+				$self->features_complete,
+			)->on_done(sub {
+				$self->login_complete->done;
+				$self->invoke_event(login_success => );
+			})->on_ready(sub { undef $f });
+		} else {
+			$self->login_complete->fail;
+			$self->invoke_event(login_fail => );
+		}
 		return $self;
 	}
 	return $self->{authorised};
+}
+
+sub login_complete {
+	my $self = shift;
+	$self->{login_complete} ||= $self->new_future
 }
 
 =head2 is_loggedin
@@ -497,6 +544,27 @@ sub deauthorise {
 	)->deauthorise;
 }
 
+sub remote_opened {
+	my $self = shift;
+	$self->{remote_opened} ||= $self->new_future
+}
+
+sub remote_closed {
+	my $self = shift;
+	$self->{remote_closed} ||= $self->new_future
+}
+
+sub close {
+	my $self = shift;
+	$self->remote_opened->then(sub {
+		$self->queue_write(
+			'</stream:stream>'
+		)
+	})->then(sub {
+		$self->remote_closed
+	});
+}
+
 1;
 
 __END__
@@ -507,4 +575,4 @@ Tom Molesworth <cpan@entitymodel.com>
 
 =head1 LICENSE
 
-Copyright Tom Molesworth 2010-2011. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2010-2014. Licensed under the same terms as Perl itself.
